@@ -70,6 +70,7 @@ class RandomNum extends JFrame {
                 label.setText("정답: "+num+" 정답 입니다!");
                 label2.setText((cnt+1)+"번 만에 맞추셨습니다");
                 cnt++;
+                return;
             }
 
             if(cnt == MAX_CNT){
