@@ -6,17 +6,16 @@ public class S03Thread {
 
 자바 스레드(Thread) 수업 정리
 
-- 1. 스레드란?
+- 1. 스레드란?(일꾼 단위)
 	•	하나의 프로그램(프로세스) 안에서 동시에 여러 작업을 수행할 수 있게 해주는 실행 단위
 	•	예: 음악 재생 + 파일 다운로드 + 화면 출력
 
 ⸻
 
 - 2. 스레드를 사용하는 이유
-	•	CPU를 효율적으로 사용
-	•	동시에 여러 작업을 처리
+	•	(CPU를) 효율적으로 일을 하기 위해 사용 ==(동시에 여러 작업을 처리) == 병렬 처리 (성능 개선)
 	•	사용자 응답성을 향상 (UI 멈춤 방지)
-	•	병렬 처리 (성능 개선)
+
 
 ⸻
 
@@ -38,16 +37,33 @@ class MyRunnable implements Runnable {
     }
 }
 
-실행 방법 (공통)
+1번 실행 방법
 
 Thread t = new MyThread();       // 또는 new Thread(new MyRunnable());
 t.start();  // run()이 아닌 start() 호출해야 새 스레드에서 실행됨
 
+2번 실행 방법
+Runnable 을 구현한 클래스를 생성자로 실행하는 방법
+Thread t = new Thread(new MyRunnable());
+t.start();
+
+3번 익명클래스 실행 방법
+Thread t = new Thread(new Runnable(){
+    public void run(){
+        //실행할 코드
+    }
+});
+t.start();
+
+4번 람다식 실행 방법 (*** 자바 8버젼)
+new Thread(() -> {
+    //실행할 코드
+}); t.start(); //
 
 ⸻
 
 - 4. run() vs start() 차이
-	•	run() → 일반 메서드처럼 실행 (스레드 아님)
+	•	run() → start가 실행할 콜백함수로 개발자가 재정의해야 함
 	•	start() → 새로운 스레드를 생성해서 run()을 내부적으로 실행
 
 ⸻
