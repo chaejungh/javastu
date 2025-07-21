@@ -2,45 +2,94 @@ package com.kosmo.advance.ex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.TextHitInfo;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Random;
-
-import com.kosmo.advance.ex.BtnHandler;
-
+// 처음 모두 흰색 -> 시작버튼 누르면 5초동안 색깔위치보여줌 -> 그다음 모두 흰색으로 체인지 -> 두개 눌러서 색깔이 일치하면 승리, 일치하지않는다면 다시 플립 (시간제한 3분)
 class CardFlip extends JFrame{
-    JButton btn1,btn2,btn3,btn4,btn5,btn6,btn7,btn8,btn9,btn10;
+    int cnt;
+    JButton[] btn = new JButton[16];
     JButton startBtn;
     JPanel panel2;
     JPanel panel;
     JLabel label;
+    ArrayList<Color> li = new ArrayList<>(16);
+    ArrayList<Color> li2 = new ArrayList<>(16);
+
+
 
     CardFlip(){
         super("CardFlip");
-        this.btn1 = new JButton();
-        this.btn2 = new JButton();
-        this.btn3 = new JButton();
-        this.btn4 = new JButton();
         this.startBtn = new JButton("시작");
-        this.panel = new JPanel();
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
+        li2.add(new Color(255,255,255));
 
+
+        li.add(new Color(255,0,0)) ;
+        li.add(new Color(255,0,0)) ;
+        li.add(new Color(0,255,0)) ;
+        li.add(new Color(0,255,0)) ;
+        li.add(new Color(0,0,255)) ;
+        li.add(new Color(0,0,255)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+        li.add(new Color(0,0,0)) ;
+
+
+        this.panel = new JPanel();
         this.panel2 = new JPanel();
+        for (int i = 0; i < btn.length; i++) {
+            this.btn[i] = new JButton();
+            panel.add(btn[i]);
+
+            btn[i].setBackground(li2.get(getRandomNum()));
+
+            int finalI = i;
+            btn[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int c = getRandomNum();
+                    btn[finalI].setBackground(li.get(c));
+                    if(li.get(c).equals(Color.BLUE)||li.get(c).equals(Color.GREEN)||li.get(c).equals(Color.RED)){
+                        cnt++;
+                        if (cnt ==6){
+                            label.setText("승리");
+                            return;
+                        }
+                    }
+                    li.remove(c);
+
+                }
+            });
+        }
+
         this.label = new JLabel("카드 뒤집기 게임");
 
         super.add(label);
         this.add(panel);
         panel.setLayout(new GridLayout(4,4,30,30));
-        panel.add(btn1);
-        panel.add(btn2);
-        panel.add(btn3);
-        panel.add(btn4);
-        btn1.setBackground(getRandomColor());
-        btn2.setBackground(getRandomColor());
-        btn3.setBackground(getRandomColor());
-        btn4.setBackground(getRandomColor());
-//        btn1.setBounds(0,0,10,30);
-//        btn2.setBounds(30,0,10,30);
-//        btn3.setBounds(60,0,10,30);
-//        btn4.setBounds(90,0,10,30);
 
         super.add(panel2,BorderLayout.NORTH);
         panel2.add(startBtn);
@@ -51,15 +100,25 @@ class CardFlip extends JFrame{
         super.setVisible(true);
     }
 
+//cnt=4;
+//[[255,0,0,f],[255,0,0,f],[0,255,0,f],[0,255,0,t],[0,0,255,f],[0,0,255,f]]
+//1. 시작 할때, 리스트 생성. 랜덤 값으로 하나를 뽑으면 그 인덱스는 삭제 -
+//2. 인덱스마다 마지막 값에 flag를 넣어서 선택여부를 확인
+    // if(true(이미 선택된)) -> 이미 선택 된 인덱스 (반복)
+    // if(false(이미 선택된)) -> cnt++ -> flag = true;
 
 
-    private Color getRandomColor(){
+    private int getRandomNum(){
         Random random = new Random();
-        int red =random.nextInt(256);
-        int blue =random.nextInt(256);
-        int green =random.nextInt(256);
-        return new Color(red,green,blue);
+
+        return random.nextInt(li.size());
     }
+//    private Color getRealColor(){
+//        Random random = new Random();
+//        int a = random.nextInt(16);
+//
+//        return li.get(a);
+//    }
 }
 public class E06CardFlip {
     public static void main(String[] args) {
