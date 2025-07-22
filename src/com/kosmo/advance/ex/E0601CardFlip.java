@@ -31,8 +31,8 @@ class CardFlip2 extends JFrame {
 
         public ColorBtn(){
             color=new Color(0,0,0);
-//            this.setBackground(color);
-//            this.setOpaque(true);
+            this.setBackground(color);
+            this.setOpaque(true);
 
             addActionListener(new ActionListener() {
                 @Override
@@ -73,32 +73,49 @@ class CardFlip2 extends JFrame {
             }else{
                 this.setBackground(color);
             }
-            //this.revalidate();
+            CardFlip2.this.revalidate();
             isFlip=!isFlip;
             cardHold++;
             if(cardHold ==1){
                 li2.add(this);
             } else if (cardHold == 2) {
                 li2.add(this);
-                if(li2.get(1).equals(new ColorBtn())){
+                ColorBtn btn1=li2.get(0);
+                ColorBtn btn2=li2.get(1);
+                li2.clear();
+//                try {Thread.sleep(1000);} catch (InterruptedException ee) {System.out.println("");}
+                if(btn2.equalsRGB(new ColorBtn()) || btn1.equalsRGB(new ColorBtn())){
                     JOptionPane.showMessageDialog(pane,"검정 오답입니다");
+//                    try {Thread.sleep(100);} catch (InterruptedException ee) {System.out.println("");}
                     cardHold=0;
                     System.out.println(cardHold);
-                    li2.get(0).setBackground(new Color(255,255,255));
-                    li2.get(1).setBackground(new Color(255,255,255));
+                    btn1.setBackground(new Color(255,255,255));
+                    btn2.setBackground(new Color(255,255,255));
 
-                } else if (li2.get(0).equals(li2.get(1))) {
+                } else if (btn1.equalsRGB(btn2)) {
 //                    this.isSelected = true; //선택된 버튼은 플립 불가
+                    cnt++;
                     cardHold=0;
                     this.setEnabled(false);
+                    JOptionPane.showMessageDialog(pane, "정답!");
+//                    try {Thread.sleep(1000);} catch (InterruptedException ee) {System.out.println("");}
+
                 }else {
                     cardHold = 0;
                     System.out.println(cardHold);
-                    li2.get(0).setBackground(new Color(255, 255, 255));
-                    li2.get(1).setBackground(new Color(255, 255, 255));
                     JOptionPane.showMessageDialog(pane, "오답입니다");
+//                    try {Thread.sleep(100);} catch (InterruptedException ee) {System.out.println("");}
+
+                    btn1.setBackground(new Color(255, 255, 255));
+                    btn2.setBackground(new Color(255, 255, 255));
+
+                }
+                if(cnt==3){
+                    JOptionPane.showMessageDialog(pane2, "승리!");
                 }
             }
+            CardFlip2.this.revalidate();
+
         }
 
         public boolean equalsRGB(ColorBtn o) {
@@ -114,6 +131,7 @@ class CardFlip2 extends JFrame {
     JPanel panel2;
     JLabel label;
     JOptionPane pane;
+    JOptionPane pane2;
     List<ColorBtn> li = new Vector<>();
     List<ColorBtn> li2 = new Vector<>();
     CardFlip2(){
@@ -140,7 +158,7 @@ class CardFlip2 extends JFrame {
                 for(ColorBtn btn : li){
                     btn.threadFlip();
                 }
-                try {Thread.sleep(100);} catch (InterruptedException ee) {System.out.println("");}
+//                try {Thread.sleep(100);} catch (InterruptedException ee) {System.out.println("");}
                 CardFlip2.this.revalidate();
 
             }).start();
