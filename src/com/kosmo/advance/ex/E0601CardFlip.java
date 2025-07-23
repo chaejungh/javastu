@@ -3,12 +3,13 @@ package com.kosmo.advance.ex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
+import java.awt.event.*;
+import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 class CardFlip2 extends JFrame {
+    private ColorBtn blackColorBtn=new ColorBtn();
 
     class ColorBtn extends JButton{
         private int r;
@@ -18,7 +19,6 @@ class CardFlip2 extends JFrame {
         private Color color;
         private boolean isFlip = true;//t=색 f=흰
         private boolean isSelected;
-
         @Override
         public String toString() {
             return "ColorBtn{" +
@@ -73,48 +73,51 @@ class CardFlip2 extends JFrame {
             }else{
                 this.setBackground(color);
             }
-            CardFlip2.this.revalidate();
+
             isFlip=!isFlip;
             cardHold++;
             if(cardHold ==1){
                 li2.add(this);
             } else if (cardHold == 2) {
                 li2.add(this);
-                ColorBtn btn1=li2.get(0);
-                ColorBtn btn2=li2.get(1);
+                ColorBtn btn1=(ColorBtn) li2.get(0);
+                ColorBtn btn2=(ColorBtn) li2.get(1);
+
+
                 li2.clear();
 //                try {Thread.sleep(1000);} catch (InterruptedException ee) {System.out.println("");}
-                if(btn2.equalsRGB(new ColorBtn()) || btn1.equalsRGB(new ColorBtn())){
-                    JOptionPane.showMessageDialog(pane,"검정 오답입니다");
+                if(btn2.equalsRGB(blackColorBtn) || btn1.equalsRGB(blackColorBtn)){
+                    JOptionPane.showMessageDialog(CardFlip2.this,"검정 오답입니다");
 //                    try {Thread.sleep(100);} catch (InterruptedException ee) {System.out.println("");}
                     cardHold=0;
                     System.out.println(cardHold);
                     btn1.setBackground(new Color(255,255,255));
                     btn2.setBackground(new Color(255,255,255));
-
-                } else if (btn1.equalsRGB(btn2)) {
+                    btn1.isFlip=false;
+                    btn2.isFlip=false;
+                }else if (btn1.equalsRGB(btn2)) {
 //                    this.isSelected = true; //선택된 버튼은 플립 불가
                     cnt++;
                     cardHold=0;
-                    this.setEnabled(false);
-                    JOptionPane.showMessageDialog(pane, "정답!");
+//                    this.setEnabled(false);
+
 //                    try {Thread.sleep(1000);} catch (InterruptedException ee) {System.out.println("");}
 
                 }else {
                     cardHold = 0;
                     System.out.println(cardHold);
-                    JOptionPane.showMessageDialog(pane, "오답입니다");
+                    JOptionPane.showMessageDialog(CardFlip2.this, "오답입니다");
 //                    try {Thread.sleep(100);} catch (InterruptedException ee) {System.out.println("");}
 
                     btn1.setBackground(new Color(255, 255, 255));
                     btn2.setBackground(new Color(255, 255, 255));
-
+                    btn2.isFlip=false;
+                    btn1.isFlip=false;
                 }
-                if(cnt==3){
-                    JOptionPane.showMessageDialog(pane2, "승리!");
-                }
+            if(cnt==3){
+                JOptionPane.showMessageDialog(CardFlip2.this, "승리!");
             }
-            CardFlip2.this.revalidate();
+            }
 
         }
 
@@ -131,9 +134,9 @@ class CardFlip2 extends JFrame {
     JPanel panel2;
     JLabel label;
     JOptionPane pane;
-    JOptionPane pane2;
-    List<ColorBtn> li = new Vector<>();
-    List<ColorBtn> li2 = new Vector<>();
+    List<JButton> li = new Vector<>();
+    List<JButton> li2 = new Vector<>();
+    Timer timer;
     CardFlip2(){
         super("CardFlip");
         this.pane = new JOptionPane();
@@ -143,38 +146,50 @@ class CardFlip2 extends JFrame {
         this.label = new JLabel("",SwingConstants.CENTER);
         this.btn = new ColorBtn[16];
 
+        timer=new Timer(2000,(e)->{
+            for(JButton btn : li){
+                ColorBtn card=(ColorBtn)btn;
+                card.threadFlip();
+            }
+            CardFlip2.this.revalidate();
+            timer.stop();
+        });
         startBtn.addActionListener(e -> {
             Collections.shuffle(li);
             panel=new JPanel();
             panel.setLayout(new GridLayout(4,4,30,30));
-            for(ColorBtn btn : li){
+            for(JButton btn : li){
                 panel.add(btn);
             }
             CardFlip2.this.add(panel);
             CardFlip2.this.revalidate();
-            new Thread(()->{
-
-                try {Thread.sleep(2000);} catch (InterruptedException ee) {System.out.println("");}
-                for(ColorBtn btn : li){
-                    btn.threadFlip();
-                }
-//                try {Thread.sleep(100);} catch (InterruptedException ee) {System.out.println("");}
-                CardFlip2.this.revalidate();
-
-            }).start();
+            timer.start();
 
         });
-        li.add(new ColorBtn(255,0,0)) ;
-        li.add(new ColorBtn(255,0,0)) ;
-        li.add(new ColorBtn(0,255,0)) ;
-        li.add(new ColorBtn(0,255,0)) ;
-        li.add(new ColorBtn(0,0,255)) ;
-        li.add(new ColorBtn(0,0,255)) ;
+        JButton btn1=new ColorBtn(255,0,0);
+        JButton btn2=new ColorBtn(255,0,0);
+        JButton btn3=new ColorBtn(0,255,0);
+        JButton btn4=new ColorBtn(0,255,0);
+        JButton btn5=new ColorBtn(0,0,255);
+        JButton btn6=new ColorBtn(0,0,255);
+        li.add(btn1) ;
+        li.add(btn2) ;
+        li.add(btn3) ;
+        li.add(btn4) ;
+        li.add(btn5) ;
+        li.add(btn6) ;
+//        li.add(new ColorBtn(0,255,0)) ;
+//        li.add(new ColorBtn(0,255,0)) ;
+//        li.add(new ColorBtn(0,0,255)) ;
+//        li.add(new ColorBtn(0,0,255)) ;
+
         for (int i = 0; i < 10; i++) {
-            li.add(new ColorBtn(0,0,0)) ;
+
+            JButton btn7=new ColorBtn(0,0,0);
+            li.add(btn7) ;
         }
         panel.setLayout(new GridLayout(4,4,30,30));
-        for(ColorBtn btn:li){
+        for(JButton btn:li){
             panel.add(btn);
         }
         this.add(panel);
