@@ -178,11 +178,6 @@ class CardFlip2 extends JFrame {
         li.add(btn4) ;
         li.add(btn5) ;
         li.add(btn6) ;
-//        li.add(new ColorBtn(0,255,0)) ;
-//        li.add(new ColorBtn(0,255,0)) ;
-//        li.add(new ColorBtn(0,0,255)) ;
-//        li.add(new ColorBtn(0,0,255)) ;
-
         for (int i = 0; i < 10; i++) {
 
             JButton btn7=new ColorBtn(0,0,0);
