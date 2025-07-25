@@ -1,4 +1,4 @@
-package com.kosmo.advance.ex;
+package com.kosmo.advance.s;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
